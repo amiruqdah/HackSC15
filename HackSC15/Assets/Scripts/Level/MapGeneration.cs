@@ -2,12 +2,19 @@
 using System.Collections;
 
 public class MapGeneration : MonoBehaviour {
-	//TODO: Combine meshes for performance optimization
-
+	
+	// Event System for the Map
+	public delegate void CreateEvent(Vector3 position);
+	public static event CreateEvent onCreate;
+	public delegate void DestroyEvent();
+	public static event DestroyEvent doDestroy;
+	
 	public int size, height;
 	public double maxDrop;
 	private int[,] map;
 	private int step;
+
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -77,9 +84,9 @@ public class MapGeneration : MonoBehaviour {
 		}
 
 
-		// Combine all Meshes
+		// Badly attempt to combine all meshes 
 
-		MeshFilter[] meshFilters = this.transform.gameObject.GetComponentsInChildren<MeshFilter>();
+		/*MeshFilter[] meshFilters = this.transform.gameObject.GetComponentsInChildren<MeshFilter>();
 		CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 		int a = 0;
 
@@ -94,6 +101,24 @@ public class MapGeneration : MonoBehaviour {
 		transform.GetComponent<MeshFilter>().mesh = new Mesh();
 		transform.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
 		transform.gameObject.active = true;
+
+	*/
+		int xSpawnPos;
+		int ySpawnPos;
+
+		do{
+			xSpawnPos = Random.Range(0, size - 1);
+			ySpawnPos = Random.Range(0, size - 1);
+		}while(map[xSpawnPos, ySpawnPos] == -1);
+
+		onCreate(new Vector3(xSpawnPos, map[xSpawnPos, ySpawnPos] + 1, ySpawnPos)); 
+	}
+
+	private void OnDestroy(){
+	
+		doDestroy();
+		// Do whatever I need to do to the map in order to destroy it and then clean up whatever
+
 	}
 		                                                            
 }
