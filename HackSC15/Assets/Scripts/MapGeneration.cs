@@ -24,26 +24,32 @@ public class MapGeneration : MonoBehaviour {
 //		}
 		map [size - 1, size - 1] = height - 1;
 
-		for (step = size - 1; step > 0; step--) 
+		step = size - 1;
+		for(int x = step - 1; x >= 0; x--)
 		{
-			for(int x = 0; x <= step; x++)
+			double rand = Random.value;
+			map[x, step] = map[x + 1, step] - (int)(rand * maxDrop);
+		}
+		for(int y = step - 1; y >= 0; y--)
+		{
+			double rand = Random.value;
+			map[step, y] = map[step, y + 1] - (int)(rand * maxDrop);
+		}
+
+		for (step = size - 2; step > 0; step--) 
+		{
+			double r = Random.value;
+			map[step, step] = Mathf.Min(Mathf.Min(map[step + 1, step], map[step, step + 1]), map[step + 1, step + 1]) - (int)(r * maxDrop);
+
+			for(int x = step - 1; x >= 0; x--)
 			{
 				double rand = Random.value;
-				map[x, step - 1] = map[x, step] - (int)(rand * maxDrop);
-				if(x == step)
-				{
-					map[x - 1, step - 1] = map[x, step] - (int)(rand * maxDrop);
-				}
+				map[x, step] = Mathf.Min(map[x + 1, step], map[x, step + 1]) - (int)(rand * maxDrop);
 			}
-			for(int y = size - 1; y >= step; y--)
+			for(int y = step - 1; y >= 0; y--)
 			{
 				double rand = Random.value;
-				map[step - 1, y] = map[step, y] - (int)(rand * maxDrop);
-				if(y == step)
-				{
-					if(Random.value > 0.5)
-						map[step - 1, y - 1] = map[step, y] - (int)(rand * maxDrop);
-				}
+				map[step, y] = Mathf.Min(map[step, y + 1], map[step + 1, y]) - (int)(rand * maxDrop);
 			}
 		}
 
@@ -76,6 +82,8 @@ public class MapGeneration : MonoBehaviour {
 			{
 				if(map[i,z] < 0)
 					map[i,z] = 0;
+				string g = i + " " + z + ' ' + map[i,z];
+				Debug.Log(g);
 			}
 		}
 
