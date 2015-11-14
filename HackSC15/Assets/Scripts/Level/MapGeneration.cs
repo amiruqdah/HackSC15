@@ -227,6 +227,10 @@ public class MapGeneration : MonoBehaviour {
 		}while(map[xSpawnPos, ySpawnPos] == -1);
 
 		onCreate(new Vector3(xSpawnPos, map[xSpawnPos, ySpawnPos] + 1, ySpawnPos)); 
+		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {
+			currentCell.x = xSpawnPos;
+			currentCell.y = ySpawnPos;
+		};
 	}
 
 	private void OnDestroy(){

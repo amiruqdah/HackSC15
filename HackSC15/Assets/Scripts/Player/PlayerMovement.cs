@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	// Possible Player Events
 
-	public delegate void SpawnEvent();
+	public delegate void SpawnEvent(ref Vector2 currentCell);
 	public static event SpawnEvent onSpawn;
 	public delegate void DieEvent();
 	public static event DieEvent onDeath;
@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour {
 	public static event WinEvent onWinEvent;
 
 	private int[,] map;
+	private int[] neighbours = new int[4];
+	private Vector2 currentCell;
 
 	// might have to change the script execution error for this
 	// Use this for initialization
@@ -23,15 +25,17 @@ public class PlayerMovement : MonoBehaviour {
 	
 		// Grab the Map Object from the Player
 		GameObject mapObject = GameObject.Find ("Map");
-		map = mapObject.GetComponent<MapGeneration>().Map;
-	
+		map = mapObject.GetComponent<MapGeneration>().Map; // grab the refrence from the map generation
+		// interestingly, we might also want to guarantee that this always executes in a certain order. 
+		onSpawn(ref currentCell);
+		Debug.Log("Current Cell: " + currentCell.x + "," + currentCell.y);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
 		if(Input.GetKey(KeyCode.A))
-			Debug.Log("Pressed A");
+
 		if(Input.GetKey(KeyCode.D))
 			Debug.Log("Pressed D");
 		if(Input.GetKey (KeyCode.S))
