@@ -120,5 +120,13 @@ public class MapGeneration : MonoBehaviour {
 		// Do whatever I need to do to the map in order to destroy it and then clean up whatever
 
 	}
+
+	// Get Set Accsesor thingies
+	public int[,] Map
+	{
+		get{
+			return map;
+		}
+	}
 		                                                            
 }
