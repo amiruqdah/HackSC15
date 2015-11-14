@@ -11,13 +11,14 @@ public class MapGeneration : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		size = 45;
-		height = 45;
-		maxDrop = 2.5;
+		size = 30;
+		height = 30;
+		maxDrop = 3.5;
 
 		map = new int[size, size];
-//		
+
 		map [size - 1, size - 1] = height - 1;
+		map[0,0] = -1;
 
 		step = size - 1;
 		for(int x = step - 1; x >= 0; x--)
@@ -69,10 +70,30 @@ public class MapGeneration : MonoBehaviour {
 					{
 						GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
 						temp.transform.position = new Vector3(x, t, y);
+						temp.transform.SetParent(this.gameObject.transform);
 					}
 				}
 			}
 		}
 
+
+		// Combine all Meshes
+
+		MeshFilter[] meshFilters = this.transform.gameObject.GetComponentsInChildren<MeshFilter>();
+		CombineInstance[] combine = new CombineInstance[meshFilters.Length];
+		int a = 0;
+
+		while (a < meshFilters.Length) {
+			combine[a].mesh = meshFilters[a].sharedMesh;
+			combine[a].transform = meshFilters[a].transform.localToWorldMatrix;
+			if(a!=0)
+				Destroy(meshFilters[a].gameObject);
+			a++;
+		}
+
+		transform.GetComponent<MeshFilter>().mesh = new Mesh();
+		transform.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
+		transform.gameObject.active = true;
 	}
+		                                                            
 }
