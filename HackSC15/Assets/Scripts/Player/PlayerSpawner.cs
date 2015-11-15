@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 [RequireComponent(typeof(MapGeneration))]
 public class PlayerSpawner : MonoBehaviour {
@@ -9,13 +10,14 @@ public class PlayerSpawner : MonoBehaviour {
 	/// 
 	public GameObject playerPrefab;
 	// Need to somehow use HFT here Lucas
-	public List<Transform> players;
+	public Stack<Transform> players;
 
 	void Start()
 	{
 		// Subscribe to the Necessary Events 
 		MapGeneration.onCreate += delegate(Vector3 position) {
-			players.Add(Instantiate(playerPrefab, position, Quaternion.identity) as Transform);
+			players.Push(Instantiate(playerPrefab, position, Quaternion.identity) as Transform);
+			players.Peek().DOScale(new Vector3(1,1,1), 2f)
 		};
 
 		MapGeneration.doDestroy += RemoveAllPlayers;
