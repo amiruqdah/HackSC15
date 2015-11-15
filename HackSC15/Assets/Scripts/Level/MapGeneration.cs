@@ -14,21 +14,21 @@ public class MapGeneration : MonoBehaviour {
 	private int[,] map;
 	private int step;
 	enum Dir {N, W, S, E};
-
+	
 	void Start()
 	{
 		init ();
 	}
-
+	
 	// Use this for initialization
-	void init () 
+	void init ()
 	{
 		size = 20;
 		height = 20;
-		maxDrop = 2.1;
+		maxDrop = 2.01;
 		
 		map = new int[size, size];
-		//		
+		//             
 		map [size - 1, size - 1] = height - 1;
 		map [0, 0] = -10;
 		
@@ -44,7 +44,7 @@ public class MapGeneration : MonoBehaviour {
 			map[step, y] = map[step, y + 1] - (int)(rand * maxDrop);
 		}
 		
-		for (step = size - 2; step > 0; step--) 
+		for (step = size - 2; step > 0; step--)
 		{
 			double r = Random.value;
 			map[step, step] = Mathf.Min(Mathf.Min(map[step + 1, step], map[step, step + 1]), map[step + 1, step + 1]) - (int)(r);
@@ -62,7 +62,7 @@ public class MapGeneration : MonoBehaviour {
 		}
 		
 		
-		for (int i = 0; i < size; i++) 
+		for (int i = 0; i < size; i++)
 		{
 			for(int z = 0; z < size; z++)
 			{
@@ -75,12 +75,12 @@ public class MapGeneration : MonoBehaviour {
 		int pathX = size - 1;
 		int pathY = size - 1;
 		int count = 0;
-		int dir = (int)Dir.S; 	//For start, can't go this dir anyways
+		int dir = (int)Dir.S;   //For start, can't go this dir anyways
 		bool done = false;
-		while (!done && count < size * 2) 
+		while (!done && count < size * 2)
 		{
 			int currH = map[pathX, pathY];
-			if(pathX - 1 >= 0 && pathY - 1 >= 0 && dir != (int)Dir.N && dir != (int)Dir.W && 
+			if(pathX - 1 >= 0 && pathY - 1 >= 0 && dir != (int)Dir.N && dir != (int)Dir.W &&
 			   Mathf.Abs(currH - map[pathX - 1, pathY]) <= 1 && Mathf.Abs(currH - map[pathX, pathY - 1]) <= 1)
 			{
 				if(pathX > pathY)
@@ -107,7 +107,7 @@ public class MapGeneration : MonoBehaviour {
 				dir = (int)Dir.S;
 				count++;
 			}
-			else if(pathX - 1 >= 0 && pathY + 1 < size && 
+			else if(pathX - 1 >= 0 && pathY + 1 < size &&
 			        currH - map[pathX - 1, pathY] == 2 && currH - 1 <= map[pathX - 1, pathY + 1] &&
 			        pathY - 1 >= 0 && pathX + 1 < size &&
 			        currH - map[pathX, pathY - 1] == 2 && currH - 1 <= map[pathX + 1, pathY - 1])
@@ -141,25 +141,25 @@ public class MapGeneration : MonoBehaviour {
 				count++;
 				Debug.Log("Added block");
 			}
-			//			else if (pathX + 1 < size && dir != (int)Dir.E && Mathf.Abs(currH - map[pathX + 1, pathY]) <= 1)
-			//			{
-			//				pathX++;
-			//				dir = (int)Dir.W;
-			//				count++;
-			//			}
-			//			else if (pathY + 1 < size && dir != (int)Dir.S && Mathf.Abs(currH - map[pathX, pathY + 1]) <= 1)
-			//			{
-			//				pathY++;
-			//				dir = (int)Dir.N;
-			//				count++;
-			//			}
+			//                      else if (pathX + 1 < size && dir != (int)Dir.E && Mathf.Abs(currH - map[pathX + 1, pathY]) <= 1)
+			//                      {
+			//                              pathX++;
+			//                              dir = (int)Dir.W;
+			//                              count++;
+			//                      }
+			//                      else if (pathY + 1 < size && dir != (int)Dir.S && Mathf.Abs(currH - map[pathX, pathY + 1]) <= 1)
+			//                      {
+			//                              pathY++;
+			//                              dir = (int)Dir.N;
+			//                              count++;
+			//                      }
 			else
 			{
 				done = true;
 			}
 		}
 		
-		if (count < size) 
+		if (count < size)
 		{
 			init ();
 			return;
@@ -180,7 +180,7 @@ public class MapGeneration : MonoBehaviour {
 					{
 						GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
 						temp.transform.position = new Vector3(x, t, y);
-						if(x == pathX && y == pathY && t == map[x,y] || 
+						if(x == pathX && y == pathY && t == map[x,y] ||
 						   x == size - 1 && y == size - 1 && t == height - 1)
 						{
 							Color r;
@@ -198,48 +198,48 @@ public class MapGeneration : MonoBehaviour {
 				}
 			}
 		}
-
-		// Badly attempt to combine all meshes 
-
+		
+		// Badly attempt to combine all meshes
+		
 		/*MeshFilter[] meshFilters = this.transform.gameObject.GetComponentsInChildren<MeshFilter>();
-		CombineInstance[] combine = new CombineInstance[meshFilters.Length];
-		int a = 0;
-
-		while (a < meshFilters.Length) {
-			combine[a].mesh = meshFilters[a].sharedMesh;
-			combine[a].transform = meshFilters[a].transform.localToWorldMatrix;
-			if(a!=0)
-				Destroy(meshFilters[a].gameObject);
-			a++;
-		}
-
-		transform.GetComponent<MeshFilter>().mesh = new Mesh();
-		transform.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
-		transform.gameObject.active = true;
-
-	*/
+                CombineInstance[] combine = new CombineInstance[meshFilters.Length];
+                int a = 0;
+ 
+                while (a < meshFilters.Length) {
+                        combine[a].mesh = meshFilters[a].sharedMesh;
+                        combine[a].transform = meshFilters[a].transform.localToWorldMatrix;
+                        if(a!=0)
+                                Destroy(meshFilters[a].gameObject);
+                        a++;
+                }
+ 
+                transform.GetComponent<MeshFilter>().mesh = new Mesh();
+                transform.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
+                transform.gameObject.active = true;
+ 
+        */
 		int xSpawnPos;
 		int ySpawnPos;
-
+		
 		do{
 			xSpawnPos = Random.Range(0, size - 1);
 			ySpawnPos = Random.Range(0, size - 1);
 		}while(map[xSpawnPos, ySpawnPos] <= 0);
 		Debug.Log(map[xSpawnPos, ySpawnPos]);
-		onCreate(new Vector3(xSpawnPos, map[xSpawnPos, ySpawnPos] + 1, ySpawnPos)); 
+		onCreate(new Vector3(xSpawnPos, map[xSpawnPos, ySpawnPos] + 1, ySpawnPos));
 		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {
 			currentCell.x = xSpawnPos;
 			currentCell.y = ySpawnPos;
 		};
 	}
-
-	private void OnDestroy(){
 	
+	private void OnDestroy(){
+		
 		doDestroy();
 		// Do whatever I need to do to the map in order to destroy it and then clean up whatever
-
+		
 	}
-
+	
 	// Get Set Accsesor thingies
 	public int[,] Map
 	{
@@ -253,5 +253,5 @@ public class MapGeneration : MonoBehaviour {
 			return size;
 		}
 	}
-		                                                            
+	
 }
