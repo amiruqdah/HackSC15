@@ -10,14 +10,13 @@ public class PlayerSpawner : MonoBehaviour {
 	/// 
 	public GameObject playerPrefab;
 	// Need to somehow use HFT here Lucas
-	public Stack<Transform> players;
+	public Stack<Transform> players = new Stack<Transform>();
 
 	void Start()
 	{
 		// Subscribe to the Necessary Events 
 		MapGeneration.onCreate += delegate(Vector3 position) {
 			players.Push(Instantiate(playerPrefab, position, Quaternion.identity) as Transform);
-			players.Peek().DOScale(new Vector3(1,1,1), 2f)
 		};
 
 		MapGeneration.doDestroy += RemoveAllPlayers;
