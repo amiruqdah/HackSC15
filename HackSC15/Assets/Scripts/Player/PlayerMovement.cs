@@ -55,6 +55,7 @@ public class PlayerMovement : MonoBehaviour {
 		{
 			CelebrationAnimation();
 			celebrated = true;
+			Destroy(this.gameObject,2f);
 		}
 
 		if(hftInput.GetAxis("Horizontal") == 0)
@@ -117,10 +118,9 @@ public class PlayerMovement : MonoBehaviour {
 	private void CelebrationAnimation()
 	{
 
-		this.transform.DOMoveY(this.transform.position.y + 14, 2f,false).SetDelay(0.5f);
+		this.transform.DOMoveY(this.transform.position.y + 25, 2f,false).SetDelay(0.5f);
 		this.transform.eulerAngles += Vector3.right * 125 * Time.deltaTime;
 		onWinEvent(); // also those who are interested in this event get notified
-		Destroy(this.gameObject,2.5f);
 	}
 	//	private void recalculateNeighbours()
 	//	{

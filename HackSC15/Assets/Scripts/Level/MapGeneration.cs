@@ -186,7 +186,8 @@ public class MapGeneration : MonoBehaviour {
 					for( ;t >= end; t--)
 					{
 						GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
-						temp.transform.position = new Vector3(x, t, y);
+						temp.transform.position = new Vector3(Random.Range(500,-500),Random.Range(500,-500), Random.Range(500,-500));
+						temp.transform.DOMove( new Vector3(x, t, y), 2.2f,false).SetEase(Ease.OutSine).SetDelay((float)Random.Range (0.5f,1f));
 						temp.transform.SetParent(this.transform);
 						if(x == pathX && y == pathY && t == map[x,y])
 						{
@@ -248,9 +249,15 @@ public class MapGeneration : MonoBehaviour {
 			Sequence destroySequence = DOTween.Sequence();
 			destroySequence.Append(go.DOMoveY(go.transform.position.y - 45,0.9f, false).SetEase(Ease.InQuart).SetDelay((float)Random.Range(0.6f,1)));
 		}
-
+		StartCoroutine(Inst());
 	}
 
+	IEnumerator Inst()
+	{
+		Destroy(this.gameObject, 4f);
+		yield return new WaitForSeconds(3f);
+		Instantiate(Resources.Load("Prefabs/Map") as GameObject);
+	}
 	
 	// Get Set Accsesor thingies
 	public int[,] Map
