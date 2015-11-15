@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour {
 		mapSize = mapObject.GetComponent<MapGeneration>().Size;
 
 		this.gameObject.transform.DOScale( new Vector3(0.7f,1f,0.7f), 0.9f).SetEase(Ease.OutBounce);
-		this.gameObject.transform.DOJump(this.transform.position, 2.5f, 1, 0.75f, false);
+		this.gameObject.transform.DOJump(this.transform.position, 2.5f, 1, 0.40f, false);
 	}
 	
 	// Update is called once per frame
