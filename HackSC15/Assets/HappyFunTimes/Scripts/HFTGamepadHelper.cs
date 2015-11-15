@@ -5,7 +5,7 @@ using HappyFunTimes;
 public class HFTGamepadHelper : MonoBehaviour {
 
     [System.NonSerialized]
-    public PlayerSpawner playerSpawner;
+	public PlayerSpawner playerSpawner;
 
     // This gives you a chance to send that player's phone
     // a command to tell it to display "The game is full" or

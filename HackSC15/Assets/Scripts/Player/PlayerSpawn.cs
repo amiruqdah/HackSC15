@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 
 [RequireComponent(typeof(MapGeneration))]
-public class PlayerSpawner : MonoBehaviour {
+public class PlayerSpawn : MonoBehaviour {
 	/// <summary>
 	/// Spawns a player randomly on any optimal position on the map.	/// </summary>
 	/// 

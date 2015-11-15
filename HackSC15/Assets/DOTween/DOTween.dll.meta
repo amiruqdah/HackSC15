@@ -1,11 +1,13 @@
 fileFormatVersion: 2
 guid: 43804aaca64d0c5439fad8784512ee69
-timeCreated: 1447554059
+timeCreated: 1447565779
 licenseType: Free
 PluginImporter:
   serializedVersion: 1
   iconMap: {}
-  executionOrder: {}
+  executionOrder:
+    DG.Tweening.Core.DOTweenComponent: 100
+    DG.Tweening.Core.DOTweenSettings: 200
   isPreloaded: 0
   platformData:
     Any:
