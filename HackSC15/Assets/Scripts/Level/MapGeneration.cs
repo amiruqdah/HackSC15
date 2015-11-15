@@ -6,8 +6,8 @@ public class MapGeneration : MonoBehaviour {
 	// Event System for the Map
 	public delegate void DestroyEvent();
 	public static event DestroyEvent doDestroy;
-
-
+	
+	
 	public int size, height;
 	public double maxDrop;
 	private int[,] map;
@@ -177,7 +177,12 @@ public class MapGeneration : MonoBehaviour {
 				int t = map[x, y];
 				if(t >= 0)
 				{
-					for( ;t >= 0; t--)
+					int end;
+					if(x - 1 < 0 || y - 1 < 0 || map[x - 1, y] <= 0 || map[x, y - 1] <= 0)
+						end = 0;
+					else
+						end = Mathf.Min(map[x - 1, y], map[x, y - 1]);
+					for( ;t >= end; t--)
 					{
 						GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
 						temp.transform.position = new Vector3(x, t, y);
@@ -187,13 +192,13 @@ public class MapGeneration : MonoBehaviour {
 							MeshRenderer rend = temp.GetComponent<MeshRenderer>();
 							Material mat = new Material(Shader.Find("Standard"));
 							mat.color = r;
-							rend.material = mat ;
+							rend.material = mat;
 						}
 					}
 				}
 			}
 		}
-
+		
 		endX = pathX;
 		endY = pathY;
 		
@@ -216,19 +221,19 @@ public class MapGeneration : MonoBehaviour {
                 transform.gameObject.active = true;
  
         */
-//		int xSpawnPos;
-//		int ySpawnPos;
-//		
-//		do{
-//			xSpawnPos = Random.Range(0, size - 1);
-//			ySpawnPos = Random.Range(0, size - 1);
-//		}while(map[xSpawnPos, ySpawnPos] <= 0);
-//		Debug.Log(map[xSpawnPos, ySpawnPos]);
-//		onCreate(new Vector3(xSpawnPos, map[xSpawnPos, ySpawnPos] + 1, ySpawnPos));
-//		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {
-//			currentCell.x = xSpawnPos;
-//			currentCell.y = ySpawnPos;
-//		};
+		//		int xSpawnPos;
+		//		int ySpawnPos;
+		//		
+		//		do{
+		//			xSpawnPos = Random.Range(0, size - 1);
+		//			ySpawnPos = Random.Range(0, size - 1);
+		//		}while(map[xSpawnPos, ySpawnPos] <= 0);
+		//		Debug.Log(map[xSpawnPos, ySpawnPos]);
+		//		onCreate(new Vector3(xSpawnPos, map[xSpawnPos, ySpawnPos] + 1, ySpawnPos));
+		//		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {
+		//			currentCell.x = xSpawnPos;
+		//			currentCell.y = ySpawnPos;
+		//		};
 	}
 	
 	private void OnDestroy(){
@@ -251,11 +256,11 @@ public class MapGeneration : MonoBehaviour {
 			return size;
 		}
 	}
-
+	
 	public int getEndX(){return endX;}
-
+	
 	public int getEndY(){return endY;}
-
+	
 	public int getHeight(int x, int y)
 	{
 		return map[x, y];
