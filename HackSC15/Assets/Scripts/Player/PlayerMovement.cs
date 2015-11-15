@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour {
 	public delegate void KeyEvent();
 	public delegate void WinEvent();
 	public static event WinEvent onWinEvent;
+	public AudioSource source;
+	public AudioClip[] sounds;
 
 	private HFTInput hftInput ;
 	private int[,] map;
@@ -34,6 +36,8 @@ public class PlayerMovement : MonoBehaviour {
 		restVert = true;
 		celebrated = false;
 		dead = false;
+
+		source = this.gameObject.GetComponent<AudioSource> ();
 
 		// Grab the Map Object from the Player
 		GameObject mapObject = GameObject.FindWithTag ("Map");
@@ -84,6 +88,8 @@ public class PlayerMovement : MonoBehaviour {
 					currentCell.x -= 1;
 					Vector3 vect = new Vector3(currentCell.x, (float)map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
 					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
+					int i = (int)((UnityEngine.Random.value - 0.001) * sounds.Length);
+					source.PlayOneShot(sounds[i]);
 				}
 			}
 			else if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || hftInput.GetAxis("Horizontal") > 0 && restHorz == true)
@@ -95,6 +101,8 @@ public class PlayerMovement : MonoBehaviour {
 					currentCell.x += 1;
 					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
 					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
+					int i = (int)((UnityEngine.Random.value - 0.001) * sounds.Length);
+					source.PlayOneShot(sounds[i]);
 				}
 			}
 			else if(Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown (KeyCode.DownArrow) || hftInput.GetAxis("Vertical") > 0 && restVert == true)
@@ -106,6 +114,8 @@ public class PlayerMovement : MonoBehaviour {
 					currentCell.y -= 1;
 					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
 					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
+					int i = (int)((UnityEngine.Random.value - 0.001) * sounds.Length);
+					source.PlayOneShot(sounds[i]);
 				}
 			}
 			else if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || hftInput.GetAxis ("Vertical") < 0 && restVert == true)
@@ -117,6 +127,8 @@ public class PlayerMovement : MonoBehaviour {
 					currentCell.y += 1;
 					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
 					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
+					int i = (int)((UnityEngine.Random.value - 0.001) * sounds.Length);
+					source.PlayOneShot(sounds[i]);
 				}
 			}
 		}

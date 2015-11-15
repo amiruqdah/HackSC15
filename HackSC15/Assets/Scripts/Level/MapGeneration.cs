@@ -9,6 +9,10 @@ public class MapGeneration : MonoBehaviour {
 	public static event DestroyEvent doDestroy;
 	public Material mat;
 	
+	public AudioSource source;
+	public AudioClip suspense;
+	public AudioClip[] sounds;
+	
 	public int size, height;
 	public double maxDrop;
 	private int[,] map;
@@ -19,6 +23,7 @@ public class MapGeneration : MonoBehaviour {
 	void Start()
 	{
 		Debug.Log("Called");
+		source = this.gameObject.GetComponent<AudioSource> ();
 		init ();
 	}
 	
@@ -201,6 +206,7 @@ public class MapGeneration : MonoBehaviour {
 				}
 			}
 		}
+		source.PlayOneShot(suspense);
 		
 		endX = pathX;
 		endY = pathY;
@@ -252,6 +258,9 @@ public class MapGeneration : MonoBehaviour {
 			//if(go.gameObject.tag != "Map")
 				//Destroy(go.gameObject,2f);
 		}
+		int i = (int)((UnityEngine.Random.value - 0.001) * sounds.Length);
+		source.PlayOneShot(sounds[i]);
+
 		doDestroy ();
 		StartCoroutine(Inst());
 	}
@@ -261,7 +270,7 @@ public class MapGeneration : MonoBehaviour {
 //		Destroy(this.gameObject, 2f);
 //		yield return new WaitForSeconds(1f);
 //		Instantiate(Resources.Load("Prefabs/Map") as GameObject);
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(3.5f);
 		foreach (Transform go in GetComponentsInChildren<Transform>()) {
 			if(go.gameObject.tag != "Map")
 				Destroy(go.gameObject);
