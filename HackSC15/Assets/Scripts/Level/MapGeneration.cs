@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class MapGeneration : MonoBehaviour {
 	
 	// Event System for the Map
 	public delegate void DestroyEvent();
 	public static event DestroyEvent doDestroy;
-	
+	public Material mat;
 	
 	public int size, height;
 	public double maxDrop;
@@ -186,6 +187,7 @@ public class MapGeneration : MonoBehaviour {
 					{
 						GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
 						temp.transform.position = new Vector3(x, t, y);
+						temp.transform.SetParent(this.transform);
 						if(x == pathX && y == pathY && t == map[x,y])
 						{
 							Color r = new Color(255,0,0,1);
@@ -201,7 +203,10 @@ public class MapGeneration : MonoBehaviour {
 		
 		endX = pathX;
 		endY = pathY;
-		
+
+
+		PlayerMovement.onWinEvent += Splice;
+
 		// Badly attempt to combine all meshes
 		
 		/*MeshFilter[] meshFilters = this.transform.gameObject.GetComponentsInChildren<MeshFilter>();
@@ -235,13 +240,17 @@ public class MapGeneration : MonoBehaviour {
 		//			currentCell.y = ySpawnPos;
 		//		};
 	}
-	
-	private void OnDestroy(){
-		
-		doDestroy();
-		// Do whatever I need to do to the map in order to destroy it and then clean up whatever
-		
+
+
+	private void Splice()
+	{
+		foreach(Transform go in GetComponentsInChildren<Transform>()){
+			Sequence destroySequence = DOTween.Sequence();
+			destroySequence.Append(go.DOMoveY(go.transform.position.y - 45,0.9f, false).SetEase(Ease.InQuart).SetDelay((float)Random.Range(0.6f,1)));
+		}
+
 	}
+
 	
 	// Get Set Accsesor thingies
 	public int[,] Map
@@ -265,5 +274,7 @@ public class MapGeneration : MonoBehaviour {
 	{
 		return map[x, y];
 	}
+
+
 	
 }

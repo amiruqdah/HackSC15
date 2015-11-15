@@ -21,20 +21,22 @@ public class PlayerMovement : MonoBehaviour {
 	private int[,] map;
 	private int[] neighbours = new int[4];
 	private Vector2 currentCell;
+	private Vector2 endCell;
 	private int mapSize;
 	private enum Dir {N=0, W, S, E};
-	private bool restHorz, restVert;
+	private bool restHorz, restVert, celebrated;
 
 	// might have to change the script execution error for this
 	// Use this for initialization
 	void Start () {
 		restHorz = true;
 		restVert = true;
+		celebrated = false;
 
 		// Grab the Map Object from the Player
 		GameObject mapObject = GameObject.Find ("Map");
 		map = mapObject.GetComponent<MapGeneration>().Map; // grab the refrence from the map generation
-		// interestingly, we might also want to guarantee that this always executes in a certain order. 
+		endCell = new Vector2(mapObject.GetComponent<MapGeneration>().getEndX(), mapObject.GetComponent<MapGeneration>().getEndY());
 		onSpawn(ref currentCell);
 		Debug.Log("Current Cell: " + currentCell.x + "," + currentCell.y);
 		mapSize = mapObject.GetComponent<MapGeneration>().Size;
@@ -48,6 +50,12 @@ public class PlayerMovement : MonoBehaviour {
 	void Update () {
 	
 		int currentHeight = map[(int)currentCell.x, (int)currentCell.y];
+
+		if(currentCell == endCell && celebrated == false)
+		{
+			CelebrationAnimation();
+			celebrated = true;
+		}
 
 		if(hftInput.GetAxis("Horizontal") == 0)
 			restHorz = true;
@@ -104,7 +112,16 @@ public class PlayerMovement : MonoBehaviour {
 		}
 		
 	}
-	
+
+
+	private void CelebrationAnimation()
+	{
+
+		this.transform.DOMoveY(this.transform.position.y + 14, 2f,false).SetDelay(0.5f);
+		this.transform.eulerAngles += Vector3.right * 125 * Time.deltaTime;
+		onWinEvent(); // also those who are interested in this event get notified
+		Destroy(this.gameObject,2.5f);
+	}
 	//	private void recalculateNeighbours()
 	//	{
 	//		if(currentCell.y < mapSize - 1)
