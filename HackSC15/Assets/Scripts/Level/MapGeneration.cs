@@ -224,8 +224,8 @@ public class MapGeneration : MonoBehaviour {
 		do{
 			xSpawnPos = Random.Range(0, size - 1);
 			ySpawnPos = Random.Range(0, size - 1);
-		}while(map[xSpawnPos, ySpawnPos] == -1);
-
+		}while(map[xSpawnPos, ySpawnPos] <= 0);
+		Debug.Log(map[xSpawnPos, ySpawnPos]);
 		onCreate(new Vector3(xSpawnPos, map[xSpawnPos, ySpawnPos] + 1, ySpawnPos)); 
 		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {
 			currentCell.x = xSpawnPos;
@@ -245,6 +245,12 @@ public class MapGeneration : MonoBehaviour {
 	{
 		get{
 			return map;
+		}
+	}
+	public int Size
+	{
+		get{
+			return size;
 		}
 	}
 		                                                            
