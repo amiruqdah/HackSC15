@@ -16,16 +16,21 @@ public class PlayerMovement : MonoBehaviour {
 	public delegate void KeyEvent();
 	public delegate void WinEvent();
 	public static event WinEvent onWinEvent;
-	
+
+	private HFTInput hftInput ;
 	private int[,] map;
 	private int[] neighbours = new int[4];
 	private Vector2 currentCell;
 	private int mapSize;
 	private enum Dir {N=0, W, S, E};
-	
+	private bool restHorz, restVert;
+
 	// might have to change the script execution error for this
 	// Use this for initialization
 	void Start () {
+		restHorz = true;
+		restVert = true;
+
 		// Grab the Map Object from the Player
 		GameObject mapObject = GameObject.Find ("Map");
 		map = mapObject.GetComponent<MapGeneration>().Map; // grab the refrence from the map generation
@@ -33,18 +38,27 @@ public class PlayerMovement : MonoBehaviour {
 		onSpawn(ref currentCell);
 		Debug.Log("Current Cell: " + currentCell.x + "," + currentCell.y);
 		mapSize = mapObject.GetComponent<MapGeneration>().Size;
-		
+
+		hftInput = this.gameObject.GetComponent<HFTInput>();
 		this.gameObject.transform.DOScale( new Vector3(0.7f,1f,0.7f), 0.9f).SetEase(Ease.OutBounce);
 		this.gameObject.transform.DOJump(this.transform.position, 2.5f, 1, 0.40f, false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+	
 		int currentHeight = map[(int)currentCell.x, (int)currentCell.y];
-		
-		if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.UpArrow))
+
+		if(hftInput.GetAxis("Horizontal") == 0)
+			restHorz = true;
+		if(hftInput.GetAxis("Vertical") == 0)
+			restVert = true;
+
+
+
+		if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.UpArrow) || hftInput.GetAxis("Horizontal") < 0 && restHorz == true)
 		{
+			restHorz = false;
 			//			recalculateNeighbours();
 			// Compare difference to see if it is an accetable jump
 			if(currentCell.x > 0 && Math.Abs(currentHeight - map[(int)currentCell.x - 1, (int)currentCell.y]) <= 1)
@@ -55,8 +69,9 @@ public class PlayerMovement : MonoBehaviour {
 			}
 		}
 		
-		if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+		if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || hftInput.GetAxis("Horizontal") > 0 && restHorz == true)
 		{
+			restHorz = false;
 			//			recalculateNeighbours();
 			if(currentCell.x < mapSize - 1 && Math.Abs(currentHeight - map[(int)currentCell.x + 1, (int)currentCell.y]) <= 1)
 			{
@@ -65,8 +80,9 @@ public class PlayerMovement : MonoBehaviour {
 				this.transform.DOJump(vect, 1f, 1, 0.15f, false);
 			}
 		}
-		if(Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown (KeyCode.DownArrow))
+		if(Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown (KeyCode.DownArrow) || hftInput.GetAxis("Vertical") > 0 && restVert == true)
 		{
+			restVert = false;
 			//			recalculateNeighbours();
 			if(currentCell.y > 0 && Math.Abs(currentHeight - map[(int)currentCell.x, (int)currentCell.y - 1]) <= 1)
 			{
@@ -75,8 +91,9 @@ public class PlayerMovement : MonoBehaviour {
 				this.transform.DOJump(vect, 1f, 1, 0.15f, false);
 			}
 		}
-		if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+		if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || hftInput.GetAxis ("Vertical") < 0 && restVert == true)
 		{
+			restVert = false;
 			//			recalculateNeighbours();
 			if(currentCell.y < mapSize - 1 && Math.Abs(currentHeight - map[(int)currentCell.x, (int)currentCell.y + 1]) <= 1)
 			{

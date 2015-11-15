@@ -6,7 +6,8 @@ public class MapGeneration : MonoBehaviour {
 	// Event System for the Map
 	public delegate void DestroyEvent();
 	public static event DestroyEvent doDestroy;
-	
+
+
 	public int size, height;
 	public double maxDrop;
 	private int[,] map;
