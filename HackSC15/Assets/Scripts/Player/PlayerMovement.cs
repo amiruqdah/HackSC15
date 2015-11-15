@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour {
 		
 		int currentHeight = map[(int)currentCell.x, (int)currentCell.y];
 		
-		if(Input.GetKeyDown(KeyCode.A))
+		if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.UpArrow))
 		{
 			//			recalculateNeighbours();
 			// Compare difference to see if it is an accetable jump
@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour {
 			}
 		}
 		
-		if(Input.GetKeyDown(KeyCode.D))
+		if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
 		{
 			//			recalculateNeighbours();
 			if(currentCell.x < mapSize - 1 && Math.Abs(currentHeight - map[(int)currentCell.x + 1, (int)currentCell.y]) <= 1)
@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour {
 				this.transform.DOJump(vect, 1f, 1, 0.15f, false);
 			}
 		}
-		if(Input.GetKeyDown(KeyCode.S))
+		if(Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown (KeyCode.DownArrow))
 		{
 			//			recalculateNeighbours();
 			if(currentCell.y > 0 && Math.Abs(currentHeight - map[(int)currentCell.x, (int)currentCell.y - 1]) <= 1)
@@ -75,7 +75,7 @@ public class PlayerMovement : MonoBehaviour {
 				this.transform.DOJump(vect, 1f, 1, 0.15f, false);
 			}
 		}
-		if(Input.GetKeyDown(KeyCode.W))
+		if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
 		{
 			//			recalculateNeighbours();
 			if(currentCell.y < mapSize - 1 && Math.Abs(currentHeight - map[(int)currentCell.x, (int)currentCell.y + 1]) <= 1)
