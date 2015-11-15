@@ -4,19 +4,16 @@ using System.Collections.Generic;
 using DG.Tweening;
 
 [RequireComponent(typeof(MapGeneration))]
-public class PlayerSpawn : MonoBehaviour {
+public class PlayerCuller : MonoBehaviour {
 	/// <summary>
 	/// Spawns a player randomly on any optimal position on the map.	/// </summary>
-	/// 
-	public GameObject playerPrefab;
-	// Need to somehow use HFT here Lucas
 	public Stack<Transform> players = new Stack<Transform>();
 
 	void Start()
 	{
 		// Subscribe to the Necessary Events 
-		MapGeneration.onCreate += delegate(Vector3 position) {
-			players.Push(Instantiate(playerPrefab, position, Quaternion.identity) as Transform);
+		HFTGamepad.onCreate += delegate(GameObject obj) {
+			players.Push(obj.GetComponent<Transform>());
 		};
 
 		MapGeneration.doDestroy += RemoveAllPlayers;

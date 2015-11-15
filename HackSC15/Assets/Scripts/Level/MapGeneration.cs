@@ -4,8 +4,6 @@ using System.Collections;
 public class MapGeneration : MonoBehaviour {
 	
 	// Event System for the Map
-	public delegate void CreateEvent(Vector3 position);
-	public static event CreateEvent onCreate;
 	public delegate void DestroyEvent();
 	public static event DestroyEvent doDestroy;
 	
@@ -13,18 +11,20 @@ public class MapGeneration : MonoBehaviour {
 	public double maxDrop;
 	private int[,] map;
 	private int step;
+	private int endX, endY;
 	enum Dir {N, W, S, E};
 	
 	void Start()
 	{
+		Debug.Log("Called");
 		init ();
 	}
 	
 	// Use this for initialization
 	void init ()
 	{
-		size = 20;
-		height = 20;
+		size = 15;
+		height = 15;
 		maxDrop = 2.01;
 		
 		map = new int[size, size];
@@ -180,15 +180,9 @@ public class MapGeneration : MonoBehaviour {
 					{
 						GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
 						temp.transform.position = new Vector3(x, t, y);
-						if(x == pathX && y == pathY && t == map[x,y] ||
-						   x == size - 1 && y == size - 1 && t == height - 1)
+						if(x == pathX && y == pathY && t == map[x,y])
 						{
-							Color r;
-							if(x == size - 1 && y == size - 1 && t == height - 1)
-								r = new Color(255,0,0,1);
-							else
-								r = new Color(0,0,255,1);
-							
+							Color r = new Color(255,0,0,1);
 							MeshRenderer rend = temp.GetComponent<MeshRenderer>();
 							Material mat = new Material(Shader.Find("Standard"));
 							mat.color = r;
@@ -198,6 +192,9 @@ public class MapGeneration : MonoBehaviour {
 				}
 			}
 		}
+
+		endX = pathX;
+		endY = pathY;
 		
 		// Badly attempt to combine all meshes
 		
@@ -218,19 +215,19 @@ public class MapGeneration : MonoBehaviour {
                 transform.gameObject.active = true;
  
         */
-		int xSpawnPos;
-		int ySpawnPos;
-		
-		do{
-			xSpawnPos = Random.Range(0, size - 1);
-			ySpawnPos = Random.Range(0, size - 1);
-		}while(map[xSpawnPos, ySpawnPos] <= 0);
-		Debug.Log(map[xSpawnPos, ySpawnPos]);
-		onCreate(new Vector3(xSpawnPos, map[xSpawnPos, ySpawnPos] + 1, ySpawnPos));
-		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {
-			currentCell.x = xSpawnPos;
-			currentCell.y = ySpawnPos;
-		};
+//		int xSpawnPos;
+//		int ySpawnPos;
+//		
+//		do{
+//			xSpawnPos = Random.Range(0, size - 1);
+//			ySpawnPos = Random.Range(0, size - 1);
+//		}while(map[xSpawnPos, ySpawnPos] <= 0);
+//		Debug.Log(map[xSpawnPos, ySpawnPos]);
+//		onCreate(new Vector3(xSpawnPos, map[xSpawnPos, ySpawnPos] + 1, ySpawnPos));
+//		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {
+//			currentCell.x = xSpawnPos;
+//			currentCell.y = ySpawnPos;
+//		};
 	}
 	
 	private void OnDestroy(){
@@ -252,6 +249,15 @@ public class MapGeneration : MonoBehaviour {
 		get{
 			return size;
 		}
+	}
+
+	public int getEndX(){return endX;}
+
+	public int getEndY(){return endY;}
+
+	public int getHeight(int x, int y)
+	{
+		return map[x, y];
 	}
 	
 }

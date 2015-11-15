@@ -233,6 +233,9 @@ public class HFTGamepad : MonoBehaviour
 	{
 		return m_netPlayer;
 	}
+	
+	public delegate void CreateEvent(GameObject obj);
+	public static event CreateEvent onCreate;
 
     void InitializeNetPlayer(SpawnInfo spawnInfo)
     {
@@ -255,10 +258,24 @@ public class HFTGamepad : MonoBehaviour
         SendControllerOptions();
         SendColor();
 		
+		//COLOR
 		MeshRenderer rend = this.gameObject.GetComponent<MeshRenderer>();
 		Material mat = new Material(Shader.Find("Standard"));
 		mat.color = m_color;
 		rend.material = mat;
+		
+		//SPAWNING
+		MapGeneration map = GameObject.Find ("Map").GetComponent<MapGeneration> ();
+		int xSpawnPos = Random.Range(map.size - 3, map.size - 1);
+		int ySpawnPos = Random.Range(map.size - 3, map.size - 1);
+		this.gameObject.transform.position = new Vector3 (xSpawnPos, 
+		                                                  map.getHeight (xSpawnPos, ySpawnPos) + 1, 
+		                                                 ySpawnPos);
+		onCreate(this.gameObject);
+		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {
+			currentCell.x = xSpawnPos;
+			currentCell.y = ySpawnPos;
+		};
     }
 
     public void InitializeNetPlayer(NetPlayer netPlayer)
@@ -282,10 +299,21 @@ public class HFTGamepad : MonoBehaviour
         SendControllerOptions();
         SendColor();
 
+		//COLOR
 		MeshRenderer rend = this.gameObject.GetComponent<MeshRenderer>();
 		Material mat = new Material(Shader.Find("Standard"));
 		mat.color = m_color;
 		rend.material = mat;
+
+		//SPAWNING
+		
+		int xSpawnPos = Random.Range(0, 2);
+		int ySpawnPos = Random.Range(0, 2);
+		onCreate(this.gameObject);
+		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {
+			currentCell.x = xSpawnPos;
+			currentCell.y = ySpawnPos;
+		};
     }
 
     void Awake()
