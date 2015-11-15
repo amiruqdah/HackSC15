@@ -249,14 +249,17 @@ public class MapGeneration : MonoBehaviour {
 			Sequence destroySequence = DOTween.Sequence();
 			destroySequence.Append(go.DOMoveY(go.transform.position.y - 45,0.9f, false).SetEase(Ease.InQuart).SetDelay((float)Random.Range(0.6f,1)));
 		}
+		doDestroy ();
 		StartCoroutine(Inst());
 	}
 
 	IEnumerator Inst()
 	{
-		Destroy(this.gameObject, 4f);
-		yield return new WaitForSeconds(3f);
-		Instantiate(Resources.Load("Prefabs/Map") as GameObject);
+//		Destroy(this.gameObject, 2f);
+//		yield return new WaitForSeconds(1f);
+//		Instantiate(Resources.Load("Prefabs/Map") as GameObject);
+		yield return new WaitForSeconds(2f);
+		init ();
 	}
 	
 	// Get Set Accsesor thingies

@@ -16,7 +16,7 @@ public class PlayerCuller : MonoBehaviour {
 			players.Push(obj.GetComponent<Transform>());
 		};
 
-		MapGeneration.doDestroy += RemoveAllPlayers;
+//		MapGeneration.doDestroy += RemoveAllPlayers;
 	}
 
 

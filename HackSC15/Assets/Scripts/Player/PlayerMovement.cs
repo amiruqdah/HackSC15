@@ -24,17 +24,19 @@ public class PlayerMovement : MonoBehaviour {
 	private Vector2 endCell;
 	private int mapSize;
 	private enum Dir {N=0, W, S, E};
-	private bool restHorz, restVert, celebrated;
+	private bool restHorz, restVert, celebrated, dead;
 
+	public void start(){Start ();}
 	// might have to change the script execution error for this
 	// Use this for initialization
 	void Start () {
 		restHorz = true;
 		restVert = true;
 		celebrated = false;
+		dead = false;
 
 		// Grab the Map Object from the Player
-		GameObject mapObject = GameObject.Find ("Map");
+		GameObject mapObject = GameObject.FindWithTag ("Map");
 		map = mapObject.GetComponent<MapGeneration>().Map; // grab the refrence from the map generation
 		endCell = new Vector2(mapObject.GetComponent<MapGeneration>().getEndX(), mapObject.GetComponent<MapGeneration>().getEndY());
 		onSpawn(ref currentCell);
@@ -44,76 +46,83 @@ public class PlayerMovement : MonoBehaviour {
 		hftInput = this.gameObject.GetComponent<HFTInput>();
 		this.gameObject.transform.DOScale( new Vector3(0.7f,1f,0.7f), 0.9f).SetEase(Ease.OutBounce);
 		this.gameObject.transform.DOJump(this.transform.position, 2.5f, 1, 0.40f, false);
+
+		MapGeneration.doDestroy += die;
 	}
-	
+
+	void die(){dead = true;}
+
 	// Update is called once per frame
-	void Update () {
-	
-		int currentHeight = map[(int)currentCell.x, (int)currentCell.y];
-
-		if(currentCell == endCell && celebrated == false)
+	void Update () 
+	{
+		if (!dead) 
 		{
-			CelebrationAnimation();
-			celebrated = true;
-			Destroy(this.gameObject,2f);
-		}
-
-		if(hftInput.GetAxis("Horizontal") == 0)
-			restHorz = true;
-		if(hftInput.GetAxis("Vertical") == 0)
-			restVert = true;
-
-
-
-		if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.UpArrow) || hftInput.GetAxis("Horizontal") < 0 && restHorz == true)
-		{
-			restHorz = false;
-			//			recalculateNeighbours();
-			// Compare difference to see if it is an accetable jump
-			if(currentCell.x > 0 && Math.Abs(currentHeight - map[(int)currentCell.x - 1, (int)currentCell.y]) <= 1)
+			int currentHeight = map[(int)currentCell.x, (int)currentCell.y];
+			
+			if(currentCell == endCell && celebrated == false)
 			{
-				currentCell.x -= 1;
-				Vector3 vect = new Vector3(currentCell.x, (float)map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
-				this.transform.DOJump(vect, 1f, 1, 0.15f, false);
+				CelebrationAnimation();
+				celebrated = true;
+				dead = true;
+				//			Destroy(this.gameObject,2f);
+			}
+			
+			if(hftInput.GetAxis("Horizontal") == 0)
+				restHorz = true;
+			if(hftInput.GetAxis("Vertical") == 0)
+				restVert = true;
+			
+			
+			
+			if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.UpArrow) || hftInput.GetAxis("Horizontal") < 0 && restHorz == true)
+			{
+				restHorz = false;
+				//			recalculateNeighbours();
+				// Compare difference to see if it is an accetable jump
+				if(currentCell.x > 0 && Math.Abs(currentHeight - map[(int)currentCell.x - 1, (int)currentCell.y]) <= 1)
+				{
+					currentCell.x -= 1;
+					Vector3 vect = new Vector3(currentCell.x, (float)map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
+					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
+				}
+			}
+			else if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || hftInput.GetAxis("Horizontal") > 0 && restHorz == true)
+			{
+				restHorz = false;
+				//			recalculateNeighbours();
+				if(currentCell.x < mapSize - 1 && Math.Abs(currentHeight - map[(int)currentCell.x + 1, (int)currentCell.y]) <= 1)
+				{
+					currentCell.x += 1;
+					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
+					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
+				}
+			}
+			else if(Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown (KeyCode.DownArrow) || hftInput.GetAxis("Vertical") > 0 && restVert == true)
+			{
+				restVert = false;
+				//			recalculateNeighbours();
+				if(currentCell.y > 0 && Math.Abs(currentHeight - map[(int)currentCell.x, (int)currentCell.y - 1]) <= 1)
+				{
+					currentCell.y -= 1;
+					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
+					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
+				}
+			}
+			else if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || hftInput.GetAxis ("Vertical") < 0 && restVert == true)
+			{
+				restVert = false;
+				//			recalculateNeighbours();
+				if(currentCell.y < mapSize - 1 && Math.Abs(currentHeight - map[(int)currentCell.x, (int)currentCell.y + 1]) <= 1)
+				{
+					currentCell.y += 1;
+					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
+					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
+				}
 			}
 		}
-		
-		if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || hftInput.GetAxis("Horizontal") > 0 && restHorz == true)
-		{
-			restHorz = false;
-			//			recalculateNeighbours();
-			if(currentCell.x < mapSize - 1 && Math.Abs(currentHeight - map[(int)currentCell.x + 1, (int)currentCell.y]) <= 1)
-			{
-				currentCell.x += 1;
-				Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
-				this.transform.DOJump(vect, 1f, 1, 0.15f, false);
-			}
-		}
-		if(Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown (KeyCode.DownArrow) || hftInput.GetAxis("Vertical") > 0 && restVert == true)
-		{
-			restVert = false;
-			//			recalculateNeighbours();
-			if(currentCell.y > 0 && Math.Abs(currentHeight - map[(int)currentCell.x, (int)currentCell.y - 1]) <= 1)
-			{
-				currentCell.y -= 1;
-				Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
-				this.transform.DOJump(vect, 1f, 1, 0.15f, false);
-			}
-		}
-		if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || hftInput.GetAxis ("Vertical") < 0 && restVert == true)
-		{
-			restVert = false;
-			//			recalculateNeighbours();
-			if(currentCell.y < mapSize - 1 && Math.Abs(currentHeight - map[(int)currentCell.x, (int)currentCell.y + 1]) <= 1)
-			{
-				currentCell.y += 1;
-				Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
-				this.transform.DOJump(vect, 1f, 1, 0.15f, false);
-			}
-		}
-		
 	}
 
+	public bool won(){return celebrated;}
 
 	private void CelebrationAnimation()
 	{

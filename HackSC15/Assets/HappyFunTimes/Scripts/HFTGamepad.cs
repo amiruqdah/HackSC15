@@ -1,6 +1,7 @@
 using HappyFunTimes;
 using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class HFTGamepad : MonoBehaviour
 {
@@ -237,8 +238,32 @@ public class HFTGamepad : MonoBehaviour
 	public delegate void CreateEvent(GameObject obj);
 	public static event CreateEvent onCreate;
 
+	private void DieAnim()
+	{
+		if (!this.gameObject.GetComponent<PlayerMovement> ().won()) 
+		{
+			Transform go = this.gameObject.transform;
+			Sequence destroySequence = DOTween.Sequence();
+			destroySequence.Append(go.DOMoveY(go.transform.position.y - 45,0.9f, false).SetEase(Ease.InQuart).SetDelay((float)Random.Range(0.6f,1)));
+		}
+		StartCoroutine (Respawn ());
+	}
+
+	private IEnumerator Respawn()
+	{
+//		NetPlayer np = m_netPlayer;
+//		Destroy (this.gameObject, 6f);
+		yield return new WaitForSeconds(5f);
+		InitializeNetPlayer (m_netPlayer);
+//		GameObject obj = Instantiate(Resources.Load("Prefabs/Player") as GameObject);
+//		obj.GetComponent<HFTGamepad> ().InitializeNetPlayer (np);
+//		Debug.Log("IN RESPAWN");
+	}
+
     void InitializeNetPlayer(SpawnInfo spawnInfo)
     {
+		MapGeneration.doDestroy += DieAnim;
+
         m_netPlayer = spawnInfo.netPlayer;
         m_netPlayer.OnDisconnect += Remove;
 
@@ -265,7 +290,7 @@ public class HFTGamepad : MonoBehaviour
 		rend.material = mat;
 		
 		//SPAWNING
-		MapGeneration map = GameObject.Find ("Map").GetComponent<MapGeneration> ();
+		MapGeneration map = GameObject.FindWithTag ("Map").GetComponent<MapGeneration> ();
 		int xSpawnPos = Random.Range(map.size - 3, map.size - 1);
 		int ySpawnPos = Random.Range(map.size - 3, map.size - 1);
 		this.gameObject.transform.position = new Vector3 (xSpawnPos, 
@@ -280,40 +305,47 @@ public class HFTGamepad : MonoBehaviour
 
     public void InitializeNetPlayer(NetPlayer netPlayer)
     {
-        m_netPlayer = netPlayer;
-        m_netPlayer.RemoveAllHandlers();    //Might make it work?
-        m_netPlayer.OnDisconnect += Remove;
-        // Setup events for the different messages.
-        m_netPlayer.RegisterCmdHandler<MessageButton>("button", HandleButton);
-        m_netPlayer.RegisterCmdHandler<MessageDPad>("dpad", HandleDPad);
-        m_netPlayer.RegisterCmdHandler<MessageOrient>("orient", HandleOrient);
-        m_netPlayer.RegisterCmdHandler<MessageAccel>("accel", HandleAccel);
-        m_netPlayer.RegisterCmdHandler<MessageRot>("rot", HandleRot);
-        m_netPlayer.RegisterCmdHandler<MessageTouch>("touch", HandleTouch);
+//		MapGeneration.doDestroy += DieAnim;
 
-        m_netPlayer.OnNameChange += ChangeName;
+//        m_netPlayer = netPlayer;
+//        m_netPlayer.RemoveAllHandlers();    //Might make it work?
+//        m_netPlayer.OnDisconnect += Remove;
+        // Setup events for the different messages.
+//        m_netPlayer.RegisterCmdHandler<MessageButton>("button", HandleButton);
+//        m_netPlayer.RegisterCmdHandler<MessageDPad>("dpad", HandleDPad);
+//        m_netPlayer.RegisterCmdHandler<MessageOrient>("orient", HandleOrient);
+//        m_netPlayer.RegisterCmdHandler<MessageAccel>("accel", HandleAccel);
+//        m_netPlayer.RegisterCmdHandler<MessageRot>("rot", HandleRot);
+//        m_netPlayer.RegisterCmdHandler<MessageTouch>("touch", HandleTouch);
+
+//        m_netPlayer.OnNameChange += ChangeName;
 
         // If the controller is showing the player "game full"
         // then tell it can play.
-        m_netPlayer.SendCmd("play");
-        SendControllerOptions();
-        SendColor();
+//        m_netPlayer.SendCmd("play");
+//        SendControllerOptions();
+//        SendColor();
 
 		//COLOR
-		MeshRenderer rend = this.gameObject.GetComponent<MeshRenderer>();
-		Material mat = new Material(Shader.Find("Standard"));
-		mat.color = m_color;
-		rend.material = mat;
+//		MeshRenderer rend = this.gameObject.GetComponent<MeshRenderer>();
+//		Material mat = new Material(Shader.Find("Standard"));
+//		mat.color = m_color;
+//		rend.material = mat;
 
 		//SPAWNING
-		
-		int xSpawnPos = Random.Range(0, 2);
-		int ySpawnPos = Random.Range(0, 2);
-		onCreate(this.gameObject);
+		MapGeneration map = GameObject.FindWithTag ("Map").GetComponent<MapGeneration> ();
+		int xSpawnPos = Random.Range(map.size - 3, map.size - 1);
+		int ySpawnPos = Random.Range(map.size - 3, map.size - 1);
+		this.gameObject.transform.position = new Vector3 (xSpawnPos, 
+		                                                  map.getHeight (xSpawnPos, ySpawnPos) + 1, 
+		                                                  ySpawnPos);
+//		onCreate(this.gameObject);
 		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {
 			currentCell.x = xSpawnPos;
 			currentCell.y = ySpawnPos;
 		};
+
+		this.gameObject.GetComponent<PlayerMovement> ().start ();
     }
 
     void Awake()
