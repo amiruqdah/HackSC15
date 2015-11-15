@@ -254,6 +254,11 @@ public class HFTGamepad : MonoBehaviour
         m_netPlayer.SendCmd("play");
         SendControllerOptions();
         SendColor();
+		
+		MeshRenderer rend = this.gameObject.GetComponent<MeshRenderer>();
+		Material mat = new Material(Shader.Find("Standard"));
+		mat.color = m_color;
+		rend.material = mat;
     }
 
     public void InitializeNetPlayer(NetPlayer netPlayer)
@@ -276,6 +281,11 @@ public class HFTGamepad : MonoBehaviour
         m_netPlayer.SendCmd("play");
         SendControllerOptions();
         SendColor();
+
+		MeshRenderer rend = this.gameObject.GetComponent<MeshRenderer>();
+		Material mat = new Material(Shader.Find("Standard"));
+		mat.color = m_color;
+		rend.material = mat;
     }
 
     void Awake()
