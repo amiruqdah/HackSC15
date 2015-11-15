@@ -253,7 +253,7 @@ public class HFTGamepad : MonoBehaviour
 	{
 //		NetPlayer np = m_netPlayer;
 //		Destroy (this.gameObject, 6f);
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(10f);
 		InitializeNetPlayer (m_netPlayer);
 //		GameObject obj = Instantiate(Resources.Load("Prefabs/Player") as GameObject);
 //		obj.GetComponent<HFTGamepad> ().InitializeNetPlayer (np);

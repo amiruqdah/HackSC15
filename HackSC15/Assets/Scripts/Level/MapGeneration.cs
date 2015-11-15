@@ -243,11 +243,14 @@ public class MapGeneration : MonoBehaviour {
 	}
 
 
+
 	private void Splice()
 	{
 		foreach(Transform go in GetComponentsInChildren<Transform>()){
 			Sequence destroySequence = DOTween.Sequence();
 			destroySequence.Append(go.DOMoveY(go.transform.position.y - 45,0.9f, false).SetEase(Ease.InQuart).SetDelay((float)Random.Range(0.6f,1)));
+			//if(go.gameObject.tag != "Map")
+				//Destroy(go.gameObject,2f);
 		}
 		doDestroy ();
 		StartCoroutine(Inst());
@@ -258,7 +261,11 @@ public class MapGeneration : MonoBehaviour {
 //		Destroy(this.gameObject, 2f);
 //		yield return new WaitForSeconds(1f);
 //		Instantiate(Resources.Load("Prefabs/Map") as GameObject);
-		yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(5f);
+		foreach (Transform go in GetComponentsInChildren<Transform>()) {
+			if(go.gameObject.tag != "Map")
+				Destroy(go.gameObject);
+		}
 		init ();
 	}
 	
