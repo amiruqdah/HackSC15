@@ -10,5 +10,5 @@ The game is also HFT Integrated.
 
 ### Special Thanks
 
-Special Thanks to Jessica Zhou (for encouragement and support) and Gemma Buosoni's artisitic skills and conversation on how to approach 
+Special Thanks to Jessica Zhou (for encouragement and support) and Gemma Buosoni's artistic skills and conversation on how to approach 
 procedurally generating the maps.
