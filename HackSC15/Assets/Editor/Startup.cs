@@ -7,5 +7,6 @@ public class Startup{
 	static Startup()
 	{
 		MapGeneration.onCreateBlock += NodePath.generateNode;
+		MapGeneration.onCreatePathBlock += NodePath.generateNode;
 	}
 }
