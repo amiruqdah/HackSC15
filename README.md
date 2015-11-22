@@ -1,7 +1,7 @@
 # HackSC15
 a game submission to HackSC2015
 
-![alt](http://i.imgur.com/x6biTpd.gif)
+![alt](http://i.imgur.com/zhwaOUf.gif)
 
 ## About
 
