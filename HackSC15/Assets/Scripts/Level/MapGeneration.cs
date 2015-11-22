@@ -7,6 +7,8 @@ public class MapGeneration : MonoBehaviour {
 	// Event System for the Map
 	public delegate void DestroyEvent();
 	public static event DestroyEvent doDestroy;
+	public delegate void CreateEvent(Vector3 position);
+	public static event CreateEvent onCreateBlock;
 	public Material mat;
 	
 	public AudioSource source;
@@ -191,6 +193,7 @@ public class MapGeneration : MonoBehaviour {
 					for( ;t >= end; t--)
 					{
 						GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+						onCreateBlock(new Vector3(x,t,y));
 						temp.transform.position = new Vector3(Random.Range(500,-500),Random.Range(500,-500), Random.Range(500,-500));
 						temp.transform.DOMove( new Vector3(x, t, y), 2.2f,false).SetEase(Ease.OutSine).SetDelay((float)Random.Range (0.5f,1f));
 						temp.transform.SetParent(this.transform);
