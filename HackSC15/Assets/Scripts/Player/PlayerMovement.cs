@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour {
 	public static event WinEvent onWinEvent;
 	public AudioSource source;
 	public AudioClip[] sounds;
+	public float heightDisplacement;
 
 	private HFTInput hftInput ;
 	private int[,] map;
@@ -86,7 +87,7 @@ public class PlayerMovement : MonoBehaviour {
 				if(currentCell.x > 0 && Math.Abs(currentHeight - map[(int)currentCell.x - 1, (int)currentCell.y]) <= 1)
 				{
 					currentCell.x -= 1;
-					Vector3 vect = new Vector3(currentCell.x, (float)map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
+					Vector3 vect = new Vector3(currentCell.x, (float)map[(int)currentCell.x, (int)currentCell.y] + heightDisplacement, currentCell.y);
 					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
 					int i = (int)((UnityEngine.Random.value - 0.001) * sounds.Length);
 					source.PlayOneShot(sounds[i]);
@@ -99,7 +100,7 @@ public class PlayerMovement : MonoBehaviour {
 				if(currentCell.x < mapSize - 1 && Math.Abs(currentHeight - map[(int)currentCell.x + 1, (int)currentCell.y]) <= 1)
 				{
 					currentCell.x += 1;
-					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
+					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + heightDisplacement, currentCell.y);
 					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
 					int i = (int)((UnityEngine.Random.value - 0.001) * sounds.Length);
 					source.PlayOneShot(sounds[i]);
@@ -112,7 +113,7 @@ public class PlayerMovement : MonoBehaviour {
 				if(currentCell.y > 0 && Math.Abs(currentHeight - map[(int)currentCell.x, (int)currentCell.y - 1]) <= 1)
 				{
 					currentCell.y -= 1;
-					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
+					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + heightDisplacement, currentCell.y);
 					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
 					int i = (int)((UnityEngine.Random.value - 0.001) * sounds.Length);
 					source.PlayOneShot(sounds[i]);
@@ -125,7 +126,7 @@ public class PlayerMovement : MonoBehaviour {
 				if(currentCell.y < mapSize - 1 && Math.Abs(currentHeight - map[(int)currentCell.x, (int)currentCell.y + 1]) <= 1)
 				{
 					currentCell.y += 1;
-					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + 1f, currentCell.y);
+					Vector3 vect = new Vector3(currentCell.x, (float) map[(int)currentCell.x, (int)currentCell.y] + heightDisplacement, currentCell.y);
 					this.transform.DOJump(vect, 1f, 1, 0.15f, false);
 					int i = (int)((UnityEngine.Random.value - 0.001) * sounds.Length);
 					source.PlayOneShot(sounds[i]);

@@ -294,7 +294,7 @@ public class HFTGamepad : MonoBehaviour
 		int xSpawnPos = Random.Range(map.size - 3, map.size - 1);
 		int ySpawnPos = Random.Range(map.size - 3, map.size - 1);
 		this.gameObject.transform.position = new Vector3 (xSpawnPos, 
-		                                                  map.getHeight (xSpawnPos, ySpawnPos) + 1, 
+		                                                  map.getHeight (xSpawnPos, ySpawnPos) + 1.5f, // stop harcoding shit, amir 
 		                                                 ySpawnPos);
 		onCreate(this.gameObject);
 		PlayerMovement.onSpawn += delegate(ref Vector2 currentCell) {

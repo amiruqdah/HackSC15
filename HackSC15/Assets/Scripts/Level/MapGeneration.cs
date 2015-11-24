@@ -21,7 +21,10 @@ public class MapGeneration : MonoBehaviour {
 	private int step;
 	private int endX, endY;
 	enum Dir {N, W, S, E};
-	
+
+	public GameObject dirtBlock;
+	public GameObject grassBlock;
+
 	void Start()
 	{
 		Debug.Log("Called");
@@ -192,11 +195,15 @@ public class MapGeneration : MonoBehaviour {
 						end = Mathf.Min(map[x - 1, y], map[x, y - 1]);
 					for( ;t >= end; t--)
 					{
-						GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+						GameObject temp;
+
+						temp = Instantiate(grassBlock);
+
 						onCreateBlock(new Vector3(x,t,y));
 						temp.transform.position = new Vector3(Random.Range(500,-500),Random.Range(500,-500), Random.Range(500,-500));
 						temp.transform.DOMove( new Vector3(x, t, y), 2.2f,false).SetEase(Ease.OutSine).SetDelay((float)Random.Range (0.5f,1f));
 						temp.transform.SetParent(this.transform);
+
 						if(x == pathX && y == pathY && t == map[x,y])
 						{
 							Color r = new Color(255,0,0,1);
@@ -205,6 +212,7 @@ public class MapGeneration : MonoBehaviour {
 							mat.color = r;
 							rend.material = mat;
 						}
+
 					}
 				}
 			}
